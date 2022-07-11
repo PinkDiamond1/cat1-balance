@@ -1,8 +1,19 @@
-FROM mhart/alpine-node:16
+FROM node:18-alpine
+
 RUN mkdir /app
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
-COPY package.json /app/package.json
-RUN npm install
-RUN npm install pm2 -g
-CMD [ "pm2-runtime", "--watch", "npm", "--", "start" ]
+COPY ./webpack /app
+RUN yarn
+RUN npm run build
+COPY ./webpack/src/img /app/dist/img
+
+RUN mkdir /server
+WORKDIR /server
+COPY ./server /server
+RUN yarn
+
+RUN yarn global add pm2
+
+ENV NODE_ENV=production
+
+CMD [ "pm2-runtime", "npm", "run", "--", "start"]

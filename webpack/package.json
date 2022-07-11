@@ -1,38 +1,38 @@
 {
   "name": "cat1-balance",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "webpack-dev-server --hot --config ./webpack.config.js --allowed-hosts all",
+    "build": "NODE_ENV=production webpack --config ./webpack.production.config.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Chia-Network/cat1-balance.git"
   },
   "author": "Matej Rifelj",
-  "bugs": {
-    "url": "https://github.com/Chia-Network/cat1-balance/issues"
-  },
-  "homepage": "https://github.com/Chia-Network/cat1-balance#readme",
   "dependencies": {
     "@babel/core": "^7.18.6",
     "@babel/plugin-transform-runtime": "7.18.6",
     "@babel/preset-env": "^7.18.6",
+    "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@rigidity/bls-signatures": "2.0.5",
     "@rigidity/clvm": "4.0.0",
+    "@svgr/webpack": "^6.2.1",
     "babel-loader": "^8.2.5",
     "babel-plugin-macros": "3.1.0",
-    "body-parser": "1.20.0",
+    "babel-plugin-styled-components": "^2.0.7",
     "copy-webpack-plugin": "11.0.0",
     "cross-env": "7.0.3",
-    "express": "4.18.1",
-    "extract-zip": "^2.0.1",
     "html-webpack-plugin": "5.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-refresh": "^0.14.0",
     "source-map-loader": "^4.0.0",
+    "styled-components": "^5.3.5",
     "typescript": "^4.7.4",
-    "webpack": "^5.73.0"
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.9.3"
   }
 }

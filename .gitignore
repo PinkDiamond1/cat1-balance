@@ -103,5 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
-# build folder
-build
+# Mac
+.DS_Store
+
+# csv unpacked
+csv_folder

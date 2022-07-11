@@ -1,0 +1,7 @@
+FROM node:18-alpine
+RUN mkdir /server
+WORKDIR /server
+COPY package.json /server/package.json
+RUN yarn
+RUN yarn global add pm2
+CMD [ "pm2-runtime", "--watch", "--ignore-watch", "csv_folder", "npm", "--", "run", "start" ]

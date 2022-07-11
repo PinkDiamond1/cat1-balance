@@ -12,8 +12,10 @@ export function calculateSyntheticPublicKey(publicKey: JacobianPoint, hiddenPuzz
 export function calculateSyntheticPrivateKey(privateKey: PrivateKey, hiddenPuzzleHash: Uint8Array): PrivateKey {
   const privateExponent = bytesToBigInt(privateKey.toBytes(), "big");
   const publicKey = privateKey.getG1();
+  console.log(1111111111);
   const syntheticOffset = calculateSyntheticOffset(publicKey, hiddenPuzzleHash);
   const syntheticPrivateExponent = mod(privateExponent + syntheticOffset, groupOrder);
+  console.log(222222222222);
   const blob = bigIntToBytes(syntheticPrivateExponent, 32, "big");
   return PrivateKey.fromBytes(blob);
 }
