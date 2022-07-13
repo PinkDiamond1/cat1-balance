@@ -4,6 +4,7 @@ const http = require("http");
 const bodyParser = require("body-parser");
 const lineReader = require("line-reader");
 const childProcess = require("child_process");
+const tails = require("./tails");
 
 const serverPort = 9090;
 
@@ -58,7 +59,9 @@ app.post("/public-key", (req, res) => {
     req.body.puzzleHashes.forEach((hash) => {
       if (csvMemory[hash]) {
         csvMemory[hash].forEach((row) => {
-          responseArray.push([hash, row[0], row[1]]);
+          const code = tails[row[0]][0];
+          const name = tails[row[0]][1];
+          responseArray.push([hash, row[0], row[1], code, name]);
         });
       }
     });

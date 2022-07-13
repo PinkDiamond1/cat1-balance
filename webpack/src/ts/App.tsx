@@ -1,4 +1,5 @@
 import React from "react";
+import { CircularProgress } from "@mui/material";
 
 import Footer from "./Footer";
 import GlobalStyle from "./GlobalStyle.css";
@@ -28,16 +29,18 @@ export default function App() {
   const publicKeyRef = React.useRef(null);
 
   const [fetchingSnapshot, setFetchingSnapshot] = React.useState(false);
-  const [tableData, setTableData] = React.useState([]);
+  const [tableData, setTableData] = React.useState(null);
   const [rowCountLimit, setRowCountLimit] = React.useState(100);
   const [fingerPrint, setFingerPrint] = React.useState("");
   const [showError, setShowError] = React.useState("");
+  const [learnMore, setLearnMore] = React.useState(false);
 
   React.useEffect(() => {
     const parsedHash = new URLSearchParams(window.location.hash.substring(1));
     if (parsedHash.get("publicKey")) {
       worker.postMessage({ publicKeyText: parsedHash.get("publicKey") });
       publicKeyRef.current.value = parsedHash.get("publicKey");
+      setTableData(null);
       setFetchingSnapshot(true);
       if (parsedHash.get("fingerprint")) {
         setFingerPrint(parsedHash.get("fingerprint"));
@@ -46,7 +49,6 @@ export default function App() {
 
     worker.onmessage = (messageEvent) => {
       const data = messageEvent.data;
-      console.log("Data....", data);
       if (data.error) {
         console.error(data.error);
       } else {
@@ -64,10 +66,11 @@ export default function App() {
       const publicKeyText = publicKeyRef.current.value;
       if (publicKeyText.length !== 96) {
         setShowError("Public key should be 96 characters long.");
+        setTableData(null);
       } else {
         worker.postMessage({ publicKeyText });
         setFetchingSnapshot(true);
-        setTableData([]);
+        setTableData(null);
       }
     }
   }
@@ -77,7 +80,12 @@ export default function App() {
       return (
         <css.WalletResults>
           <css.ShadowedBox>
-            <css.Gathering>Gathering on-chain data...</css.Gathering>
+            <css.Gathering>
+              <div>
+                <CircularProgress color="inherit" disableShrink />
+              </div>
+              <div>Gathering on-chain data...</div>
+            </css.Gathering>
           </css.ShadowedBox>
         </css.WalletResults>
       );
@@ -92,9 +100,10 @@ export default function App() {
       .map((row, idx) => {
         const amount = Number(row[2]).toLocaleString();
         return (
-          <tr key={row[0] + "|" + idx}>
-            <td>{row[0].substring(0, 30)}...</td>
-            <td>{row[1].substring(0, 30)}...</td>
+          <tr key={row[0] + "|" + idx} onClick={() => window.open("https://www.taildatabase.com/tail/" + row[1], "_blank")}>
+            <td>{row[0]}</td>
+            <td>{row[3]}</td>
+            <td>{row[4]}</td>
             <td>{amount}</td>
           </tr>
         );
@@ -130,7 +139,15 @@ export default function App() {
   }
 
   function renderTableContainer() {
-    if (tableData.length) {
+    if (!tableData) {
+      return null;
+    } else if (tableData.length === 0) {
+      return (
+        <css.WalletResults>
+          <css.ShadowedBox>No CATs found.</css.ShadowedBox>
+        </css.WalletResults>
+      );
+    } else if (tableData.length) {
       return (
         <css.WalletResults>
           {renderWalletNumber()}
@@ -139,7 +156,8 @@ export default function App() {
               <thead>
                 <tr>
                   <th>Puzzle hash</th>
-                  <th>Tail hash</th>
+                  <th>Code</th>
+                  <th>Name</th>
                   <th>Amount</th>
                 </tr>
               </thead>
@@ -150,6 +168,7 @@ export default function App() {
         </css.WalletResults>
       );
     }
+    return null;
   }
 
   function renderError() {
@@ -163,6 +182,11 @@ export default function App() {
     if (e.key === "Enter") {
       queryHash();
     }
+  }
+
+  function renderLearnMore() {
+    if (!learnMore) return null;
+    return <img src="/img/chia-public-key.png" />;
   }
 
   return (
@@ -192,7 +216,11 @@ export default function App() {
             <css.SearchButton onClick={queryHash}>Get my snapshot</css.SearchButton>
           </css.SearchInput>
           {renderError()}
-          <p>Learn how to find your public key here. </p>
+          <css.LearnMore onClick={() => setLearnMore(!learnMore)} learnMore={learnMore}>
+            <span>Learn how to find your public key here.</span>
+            <img src="/img/arrow_down.svg" alt="Chia Network Logo" />
+            {renderLearnMore()}
+          </css.LearnMore>
           <p>
             Public keys are 96 characters long. It should look like this:
             <br />

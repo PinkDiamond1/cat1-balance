@@ -114,7 +114,10 @@ css.TableStyled = styled.table`
 css.Gathering = styled.div`
   display: inline-block;
   width: 500px;
-  line-height: 180px;
+  padding: 75px 25px;
+  > div + div {
+    margin: 15px;
+  }
 `;
 
 css.WalletNumberContainer = styled.div`
@@ -125,7 +128,7 @@ css.WalletNumberContainer = styled.div`
 css.WalletNumber = styled.div`
   font-size: 32px;
   font-weight: 500;
-  width: 720px;
+  width: 880px;
   display: inline-block;
   text-align: left;
 `;
@@ -140,6 +143,18 @@ css.MoreResults = styled.div`
 
 css.ErrorMessage = styled.p`
   color: red;
+`;
+
+css.LearnMore = styled.p`
+  cursor: pointer;
+  img:nth-child(2) {
+    display: inline-block;
+    margin-left: 5px;
+    transform: ${(props) => (props.learnMore ? "rotate(180deg)" : "rotate(0deg)")};
+  }
+  img:nth-child(3) {
+    margin: 10px 0;
+  }
 `;
 
 export default css;

@@ -24,9 +24,13 @@ self.onmessage = async ({ data: { publicKeyText } }) => {
     if (process.env.NODE_ENV === "development" && publicKeyText === "a44b7cee1130f2420e70cd8c9b7c1170364356f13605db25903bbf7812b4dc96e71992a0137834aa3a46667d20b4008f") {
       setTimeout(() => {
         self.postMessage({ puzzleHashes: random100 });
-      }, 4000);
+      }, 500);
     } else {
-      self.postMessage({ puzzleHashes: calcPuzzleHashes(publicKeyText) });
+      try {
+        self.postMessage({ puzzleHashes: calcPuzzleHashes(publicKeyText) });
+      } catch (e) {
+        self.postMessage({ puzzleHashes: [] });
+      }
     }
   }
 };
