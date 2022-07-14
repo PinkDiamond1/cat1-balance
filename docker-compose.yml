@@ -1,0 +1,47 @@
+version: "3"
+services:
+  cat1_server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.development
+    container_name: cat1_server
+    ports:
+      - "9090"
+    volumes:
+      - "/server/node_modules"
+      - "/server/csv_folder"
+      - "./server/:/server/"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - default
+
+  cat1_nginx:
+    image: nginx:stable-alpine
+    container_name: cat1_nginx
+    ports:
+      - "80:80"
+    links:
+      - cat1_server
+      - cat1_webpack
+    networks:
+      - default
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+
+  cat1_webpack:
+    build:
+      context: ./webpack
+      dockerfile: Dockerfile.development
+    container_name: cat1_webpack
+    ports:
+      - "80"
+      - "8080:8080" # websockets hot reload
+    volumes:
+      - "/app/node_modules"
+      - "/app/dist"
+      - "./webpack/:/app/"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - default

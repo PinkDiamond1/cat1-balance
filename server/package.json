@@ -1,0 +1,18 @@
+{
+  "name": "cat1-balance-server",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chia-Network/cat1-balance.git"
+  },
+  "author": "Matej Rifelj",
+  "dependencies": {
+    "body-parser": "1.20.0",
+    "express": "4.18.1",
+    "extract-zip": "^2.0.1",
+    "line-reader": "^0.4.0"
+  }
+}
