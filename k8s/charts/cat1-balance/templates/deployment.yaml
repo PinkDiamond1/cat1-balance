@@ -6,9 +6,6 @@ metadata:
     {{- include "cat1-balance.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  strategy:
-    # Since we use the persistent DB, we need to stop the old pod before creating the new one
-    type: Recreate
   selector:
     matchLabels:
       {{- include "cat1-balance.selectorLabels" . | nindent 8 }}
@@ -38,30 +35,8 @@ spec:
             httpGet:
               path: /
               port: {{ .Values.service.internalPort }}
-          env:
-            - name: GF_PATHS_CONFIG
-              value: "/etc/cat1-balance-conf/cat1-balance.ini"
-            - name: GF_PATHS_DATA
-              value: "/var/lib/cat1-balance/data"
-          volumeMounts:
-            - name: config
-              mountPath: /etc/cat1-balance-conf
-            - name: datasources
-              mountPath: /etc/cat1-balance/provisioning/datasources
-            - name: data
-              mountPath: /var/lib/cat1-balance/data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      volumes:
-        - name: config
-          secret:
-            secretName: {{ include "cat1-balance.fullname" . }}
-        - name: datasources
-          secret:
-            secretName: {{ include "cat1-balance.fullname" . }}-datasources
-        - name: data
-          persistentVolumeClaim:
-            claimName: {{ include "cat1-balance.fullname" . }}
       securityContext:
         fsGroup: 0
       {{- with .Values.nodeSelector }}
