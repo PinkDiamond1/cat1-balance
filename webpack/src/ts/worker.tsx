@@ -15,8 +15,6 @@ function calcPuzzleHashes(publicKeyText): string[] {
   return puzzleHashes;
 }
 
-const testingPuzzleHashes = [];
-
 self.onmessage = async ({ data: { publicKeyText } }) => {
   if (!publicKeyText || publicKeyText.length !== 96) {
     self.postMessage({ error: "Ups... Public key should be 96 characters long." });

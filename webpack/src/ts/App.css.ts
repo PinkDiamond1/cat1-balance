@@ -88,6 +88,7 @@ css.ShadowedBox = styled.div`
 `;
 
 css.TableStyled = styled.table`
+  width: 700px;
   font-family: "Roboto", sans-serif;
   th {
     font-size: 14px;
@@ -128,7 +129,7 @@ css.WalletNumberContainer = styled.div`
 css.WalletNumber = styled.div`
   font-size: 32px;
   font-weight: 500;
-  width: 880px;
+  width: 750px;
   display: inline-block;
   text-align: left;
 `;

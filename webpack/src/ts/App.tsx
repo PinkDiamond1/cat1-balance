@@ -8,8 +8,6 @@ import css from "./App.css";
 
 const worker = new Worker("worker.js");
 
-let publicKeyText;
-
 async function postData(url = "", data = {}) {
   const response = await fetch(url, {
     method: "POST",
@@ -92,22 +90,41 @@ export default function App() {
     }
   }
 
-  function renderTableRows() {
-    return tableData
-      .filter((row, idx) => {
-        return idx < rowCountLimit;
+  function dataObject() {
+    const balanceObject = {};
+    (tableData || []).forEach((row) => {
+      const existing = balanceObject[row[1]];
+      if (!existing) {
+        balanceObject[row[1]] = [row[0], row[1], parseInt(row[2]), row[3], row[4]];
+      } else {
+        balanceObject[row[1]] = [existing[0], existing[1], existing[2] + parseInt(row[2]), existing[3], existing[4]];
+      }
+    });
+    return balanceObject;
+  }
+
+  function dataArray() {
+    const objects = dataObject();
+    return Object.keys(objects)
+      .map((key) => {
+        return objects[key];
       })
-      .map((row, idx) => {
-        const amount = Number(row[2]).toLocaleString();
-        return (
-          <tr key={row[0] + "|" + idx} onClick={() => window.open("https://www.taildatabase.com/tail/" + row[1], "_blank")}>
-            <td>{row[0]}</td>
-            <td>{row[3]}</td>
-            <td>{row[4]}</td>
-            <td>{amount}</td>
-          </tr>
-        );
+      .sort((a, b) => {
+        return a[3] > b[3] ? 1 : -1;
       });
+  }
+
+  function renderTableRows() {
+    return dataArray().map((row, idx) => {
+      const amount = Number(row[2]).toLocaleString();
+      return (
+        <tr key={row[0] + "|" + idx} onClick={() => window.open("https://www.taildatabase.com/tail/" + row[1], "_blank")}>
+          <td>{row[4]}</td>
+          <td>{row[3]}</td>
+          <td>{amount}</td>
+        </tr>
+      );
+    });
   }
 
   function renderWalletNumber() {
@@ -120,7 +137,7 @@ export default function App() {
   }
 
   function renderShowMoreResults() {
-    if (tableData.length === 0 || tableData.length <= rowCountLimit) {
+    if (dataArray().length === 0 || dataArray().length <= rowCountLimit) {
       return null;
     }
     return (
@@ -155,10 +172,9 @@ export default function App() {
             <css.TableStyled>
               <thead>
                 <tr>
-                  <th>Puzzle hash</th>
-                  <th>Code</th>
                   <th>Name</th>
-                  <th>Amount</th>
+                  <th>Code</th>
+                  <th>Balance</th>
                 </tr>
               </thead>
               <tbody>{renderTableRows()}</tbody>

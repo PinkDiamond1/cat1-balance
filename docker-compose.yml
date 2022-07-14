@@ -9,6 +9,7 @@ services:
       - "9090"
     volumes:
       - "/server/node_modules"
+      - "/server/csv_folder"
       - "./server/:/server/"
     environment:
       - NODE_ENV=development
@@ -38,6 +39,7 @@ services:
       - "8080:8080" # websockets hot reload
     volumes:
       - "/app/node_modules"
+      - "/app/dist"
       - "./webpack/:/app/"
     environment:
       - NODE_ENV=development

@@ -59,9 +59,11 @@ app.post("/public-key", (req, res) => {
     req.body.puzzleHashes.forEach((hash) => {
       if (csvMemory[hash]) {
         csvMemory[hash].forEach((row) => {
-          const code = tails[row[0]][0];
-          const name = tails[row[0]][1];
-          responseArray.push([hash, row[0], row[1], code, name]);
+          if (tails[row[0]]) {
+            const code = tails[row[0]][0];
+            const name = tails[row[0]][1];
+            responseArray.push([hash, row[0], row[1], code, name]);
+          }
         });
       }
     });
@@ -77,4 +79,4 @@ if (process.env.NODE_ENV === "production") {
 
 const server = http.createServer(app);
 server.listen(serverPort);
-console.log(`Server listening on port ${serverPort}...`);
+console.log(`=============> Server listening on port ${serverPort} <=============`);
