@@ -94,6 +94,7 @@ css.TableStyled = styled.table`
     font-size: 14px;
     font-weight: 500;
     border-bottom: 1px solid #e0e0e0;
+    white-space: nowrap;
   }
   th:last-child {
     text-align: right;

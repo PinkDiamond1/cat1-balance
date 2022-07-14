@@ -63,6 +63,8 @@ app.post("/public-key", (req, res) => {
             const code = tails[row[0]][0];
             const name = tails[row[0]][1];
             responseArray.push([hash, row[0], row[1], code, name]);
+          } else {
+            responseArray.push([hash, row[0], row[1], "/", hash]);
           }
         });
       }

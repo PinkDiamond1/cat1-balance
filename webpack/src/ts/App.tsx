@@ -172,8 +172,8 @@ export default function App() {
             <css.TableStyled>
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Code</th>
+                  <th>Token Name</th>
+                  <th>Ticker Symbol</th>
                   <th>Balance</th>
                 </tr>
               </thead>
@@ -219,7 +219,7 @@ export default function App() {
       <css.Content>
         <div className="col-8-container txt-col-blocks">
           <div className="full-width-col">
-            <p className="lrg-txt">Chia’s token standard has been updated to CAT2 and as a result original issuers of CAT tokens will be re-issuing their tokens as of July XXth, 2022, 12:00 UTC and airdropping the updated tokens to your wallet.</p>
+            <p className="lrg-txt">Chia’s token standard has been updated to CAT2 and as a result original issuers of CAT tokens will be re-issuing their tokens as of July 21st, 2022, 17:00 UTC and airdropping the updated tokens to your wallet.</p>
             <p>This site will help you understand your balance at the time the snapshot was taken. Any transactions that settled after the snapshot won’t be accounted for in the balances reported here.</p>
           </div>
         </div>
