@@ -1,0 +1,16 @@
+{{ if .Values.deployCert }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cat1-balance-star
+  labels:
+    {{- include "cat1-balance.labels" . | nindent 4 }}
+spec:
+  secretName: cat1-balance-star-tls
+  dnsNames:
+    - "cat1.chia.net"
+    - "*.cat1.chia.net"
+  issuerRef:
+    name: letsencrypt-cf
+    kind: ClusterIssuer
+{{ end }}
