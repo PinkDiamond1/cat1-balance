@@ -11,6 +11,9 @@ css.Container = styled.div``;
 
 css.Content = styled.div`
   padding: 1.5rem;
+  .full-width-col {
+    padding: 0 5px;
+  }
 `;
 
 css.SearchContainer = styled.div`
@@ -159,4 +162,7 @@ css.LearnMore = styled.p`
   }
 `;
 
+css.DownloadSnapshotDb = styled.div`
+  padding: 15px 0;
+`;
 export default css;

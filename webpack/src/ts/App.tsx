@@ -20,23 +20,27 @@ async function postData(url = "", data = {}) {
     referrerPolicy: "no-referrer",
     body: JSON.stringify(data),
   });
-  return response.json(); // parses JSON response into native JavaScript objects
+  return response.json();
 }
 
 export default function App() {
   const publicKeyRef = React.useRef<HTMLInputElement | null>(null);
-
   const [fetchingSnapshot, setFetchingSnapshot] = React.useState(false);
   const [tableData, setTableData] = React.useState<null | any>(null);
-  const [rowCountLimit, setRowCountLimit] = React.useState(100);
   const [fingerPrint, setFingerPrint] = React.useState("");
   const [showError, setShowError] = React.useState("");
   const [learnMore, setLearnMore] = React.useState(false);
+  const publicKey = React.useRef();
+
+  const rowCountLimit = React.useRef(0);
+
+  const balanceObject = {};
 
   React.useEffect(() => {
     const parsedHash = new URLSearchParams(window.location.hash.substring(1));
     if (parsedHash.get("publicKey")) {
-      worker.postMessage({ publicKeyText: parsedHash.get("publicKey") });
+      publicKey.current = parsedHash.get("publicKey");
+      worker.postMessage({ publicKeyText: publicKey.current, rowCountLimit: rowCountLimit.current });
       if (publicKeyRef.current) {
         publicKeyRef.current.value = parsedHash.get("publicKey") as string;
         setTableData(null);
@@ -68,7 +72,8 @@ export default function App() {
         setShowError("Public key should be 96 characters long.");
         setTableData(null);
       } else {
-        worker.postMessage({ publicKeyText });
+        rowCountLimit.current = 0;
+        worker.postMessage({ publicKeyText, rowCountLimit: rowCountLimit.current });
         setFetchingSnapshot(true);
         setTableData(null);
       }
@@ -93,7 +98,6 @@ export default function App() {
   }
 
   function getTableArray(responseData) {
-    const balanceObject = {};
     (responseData || []).forEach((row) => {
       const existing = balanceObject[row[1]];
       if (!existing) {
@@ -113,7 +117,7 @@ export default function App() {
 
   function renderTableRows() {
     return tableData.map((row, idx) => {
-      const amount = Number(row[2]).toLocaleString();
+      const amount = parseInt(Number(row[2]) / 1000).toLocaleString();
       return (
         <tr key={row[0] + "|" + idx} onClick={() => window.open("https://www.taildatabase.com/tail/" + row[1], "_blank")}>
           <td>{row[4]}</td>
@@ -134,26 +138,34 @@ export default function App() {
   }
 
   function renderShowMoreResults() {
-    if (tableData.length === 0 || tableData.length <= rowCountLimit) {
+    if (!tableData || tableData.length === 0) {
       return null;
     }
     return (
       <css.MoreResults>
-        Not seeing everything? Try searching additional wallet addresses
+        <div>Searched through {rowCountLimit.current + 100} receive addresses.</div>
+        <span>Not seeing everything? Try searching additional wallet addresses</span>
         <button
           className="outline-green-button"
           onClick={() => {
-            setRowCountLimit(rowCountLimit + 100);
+            rowCountLimit.current = rowCountLimit.current + 100;
+            worker.postMessage({ publicKeyText: publicKey.current, rowCountLimit: rowCountLimit.current });
+            setFetchingSnapshot(true);
           }}
         >
           Search next 100
         </button>
+        <css.DownloadSnapshotDb>
+          <small>
+            You can also <a href="/snapshot.csv">download the snapshot database</a> if you want to explore deeper.
+          </small>
+        </css.DownloadSnapshotDb>
       </css.MoreResults>
     );
   }
 
   function renderTableContainer() {
-    if (!tableData) {
+    if (!tableData || fetchingSnapshot) {
       return null;
     } else if (tableData.length === 0) {
       return (
@@ -216,7 +228,7 @@ export default function App() {
       <css.Content>
         <div className="col-8-container txt-col-blocks">
           <div className="full-width-col">
-            <p className="lrg-txt">Chia’s token standard has been updated to CAT2 and as a result original issuers of CAT tokens will be re-issuing their tokens as of July 21st, 2022, 17:00 UTC and airdropping the updated tokens to your wallet.</p>
+            <p className="lrg-txt">Chia's token standard has been updated to CAT2. As a result, original CAT issuers will be re-issuing their tokens starting July 21st, 2022, 17:00 UTC that will be airdropped to your wallet.</p>
             <p>This site will help you understand your balance at the time the snapshot was taken. Any transactions that settled after the snapshot won’t be accounted for in the balances reported here.</p>
           </div>
         </div>
