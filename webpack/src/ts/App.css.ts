@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const css = {};
+const css: any = {};
 
 css.Header = styled.div`
   padding: 16px 8px;

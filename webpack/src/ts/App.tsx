@@ -24,10 +24,10 @@ async function postData(url = "", data = {}) {
 }
 
 export default function App() {
-  const publicKeyRef = React.useRef(null);
+  const publicKeyRef = React.useRef<HTMLInputElement | null>(null);
 
   const [fetchingSnapshot, setFetchingSnapshot] = React.useState(false);
-  const [tableData, setTableData] = React.useState(null);
+  const [tableData, setTableData] = React.useState<null | any>(null);
   const [rowCountLimit, setRowCountLimit] = React.useState(100);
   const [fingerPrint, setFingerPrint] = React.useState("");
   const [showError, setShowError] = React.useState("");
@@ -37,11 +37,13 @@ export default function App() {
     const parsedHash = new URLSearchParams(window.location.hash.substring(1));
     if (parsedHash.get("publicKey")) {
       worker.postMessage({ publicKeyText: parsedHash.get("publicKey") });
-      publicKeyRef.current.value = parsedHash.get("publicKey");
-      setTableData(null);
-      setFetchingSnapshot(true);
-      if (parsedHash.get("fingerprint")) {
-        setFingerPrint(parsedHash.get("fingerprint"));
+      if (publicKeyRef.current) {
+        publicKeyRef.current.value = parsedHash.get("publicKey") as string;
+        setTableData(null);
+        setFetchingSnapshot(true);
+        if (parsedHash.get("fingerprint")) {
+          setFingerPrint(parsedHash.get("fingerprint") || "");
+        }
       }
     }
 
@@ -51,7 +53,7 @@ export default function App() {
         console.error(data.error);
       } else {
         postData("/public-key", { puzzleHashes: data.puzzleHashes }).then((response) => {
-          setTableData(response.data);
+          setTableData(getTableArray(response.data));
           setFetchingSnapshot(false);
         });
       }
@@ -61,8 +63,8 @@ export default function App() {
   function queryHash() {
     setShowError("");
     if (!fetchingSnapshot) {
-      const publicKeyText = publicKeyRef.current.value;
-      if (publicKeyText.length !== 96) {
+      const publicKeyText = publicKeyRef.current?.value;
+      if (publicKeyText?.length !== 96) {
         setShowError("Public key should be 96 characters long.");
         setTableData(null);
       } else {
@@ -90,9 +92,9 @@ export default function App() {
     }
   }
 
-  function dataObject() {
+  function getTableArray(responseData) {
     const balanceObject = {};
-    (tableData || []).forEach((row) => {
+    (responseData || []).forEach((row) => {
       const existing = balanceObject[row[1]];
       if (!existing) {
         balanceObject[row[1]] = [row[0], row[1], parseInt(row[2]), row[3], row[4]];
@@ -100,14 +102,9 @@ export default function App() {
         balanceObject[row[1]] = [existing[0], existing[1], existing[2] + parseInt(row[2]), existing[3], existing[4]];
       }
     });
-    return balanceObject;
-  }
-
-  function dataArray() {
-    const objects = dataObject();
-    return Object.keys(objects)
+    return Object.keys(balanceObject)
       .map((key) => {
-        return objects[key];
+        return balanceObject[key];
       })
       .sort((a, b) => {
         return a[3] > b[3] ? 1 : -1;
@@ -115,7 +112,7 @@ export default function App() {
   }
 
   function renderTableRows() {
-    return dataArray().map((row, idx) => {
+    return tableData.map((row, idx) => {
       const amount = Number(row[2]).toLocaleString();
       return (
         <tr key={row[0] + "|" + idx} onClick={() => window.open("https://www.taildatabase.com/tail/" + row[1], "_blank")}>
@@ -137,7 +134,7 @@ export default function App() {
   }
 
   function renderShowMoreResults() {
-    if (dataArray().length === 0 || dataArray().length <= rowCountLimit) {
+    if (tableData.length === 0 || tableData.length <= rowCountLimit) {
       return null;
     }
     return (
@@ -240,7 +237,7 @@ export default function App() {
           <p>
             Public keys are 96 characters long. It should look like this:
             <br />
-            <font color="#777">a95db0f87574d1af5991f93df7d36f40ccadf6c403889ae5987f6013a28caa150d6bbc24493889c61a4829c1656d7e88</font>
+            a95db0f87574d1af5991f93df7d36f40ccadf6c403889ae5987f6013a28caa150d6bbc24493889c61a4829c1656d7e88
           </p>
         </css.Search>
       </css.SearchContainer>
