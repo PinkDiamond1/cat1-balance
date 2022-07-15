@@ -31,10 +31,9 @@ export default function App() {
   const [showError, setShowError] = React.useState("");
   const [learnMore, setLearnMore] = React.useState(false);
   const publicKey = React.useRef();
+  const balanceObject = React.useRef({});
 
   const rowCountLimit = React.useRef(0);
-
-  const balanceObject = {};
 
   React.useEffect(() => {
     const parsedHash = new URLSearchParams(window.location.hash.substring(1));
@@ -57,7 +56,8 @@ export default function App() {
         console.error(data.error);
       } else {
         postData("/public-key", { puzzleHashes: data.puzzleHashes }).then((response) => {
-          setTableData(getTableArray(response.data));
+          const newData = getTableArray(response.data);
+          setTableData(newData);
           setFetchingSnapshot(false);
         });
       }
@@ -66,11 +66,14 @@ export default function App() {
 
   function queryHash() {
     setShowError("");
+    wipeTableData();
     if (!fetchingSnapshot) {
       const publicKeyText = publicKeyRef.current?.value;
+      location.hash = "#publicKey=" + publicKeyRef.current?.value;
       if (publicKeyText?.length !== 96) {
         setShowError("Public key should be 96 characters long.");
         setTableData(null);
+        setFetchingSnapshot(false);
       } else {
         rowCountLimit.current = 0;
         worker.postMessage({ publicKeyText, rowCountLimit: rowCountLimit.current });
@@ -99,25 +102,30 @@ export default function App() {
 
   function getTableArray(responseData) {
     (responseData || []).forEach((row) => {
-      const existing = balanceObject[row[1]];
+      const existing = balanceObject.current[row[1]];
       if (!existing) {
-        balanceObject[row[1]] = [row[0], row[1], parseInt(row[2]), row[3], row[4]];
+        balanceObject.current[row[1]] = [row[0], row[1], parseInt(row[2]), row[3], row[4]];
       } else {
-        balanceObject[row[1]] = [existing[0], existing[1], existing[2] + parseInt(row[2]), existing[3], existing[4]];
+        balanceObject.current[row[1]] = [existing[0], existing[1], existing[2] + parseInt(row[2]), existing[3], existing[4]];
       }
     });
-    return Object.keys(balanceObject)
+    return Object.keys(balanceObject.current)
       .map((key) => {
-        return balanceObject[key];
+        return balanceObject.current[key];
       })
       .sort((a, b) => {
         return a[3] > b[3] ? 1 : -1;
       });
   }
 
+  function wipeTableData() {
+    balanceObject.current = {};
+    setTableData(null);
+  }
+
   function renderTableRows() {
     return tableData.map((row, idx) => {
-      const amount = parseInt(Number(row[2]) / 1000).toLocaleString();
+      const amount = Number(Number(row[2]) / 1000).toLocaleString();
       return (
         <tr key={row[0] + "|" + idx} onClick={() => window.open("https://www.taildatabase.com/tail/" + row[1], "_blank")}>
           <td>{row[4]}</td>
@@ -206,6 +214,7 @@ export default function App() {
   function handleKeyDown(e) {
     if (e.key === "Enter") {
       queryHash();
+      e.preventDefault();
     }
   }
 
