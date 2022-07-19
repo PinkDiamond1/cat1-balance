@@ -93,7 +93,6 @@ export default function App() {
     if (!fetchingSnapshot) {
       const publicKeyText = publicKeyRef.current?.value;
       publicKey.current = publicKeyText;
-      location.hash = "#publicKey=" + publicKeyRef.current?.value;
       if (publicKeyText?.length !== 96) {
         setShowError("Public key should be 96 characters long.");
         setTableData(null);
@@ -222,7 +221,6 @@ export default function App() {
         </css.WalletResults>
       );
     }
-    return null;
   }
 
   function renderError() {
@@ -234,7 +232,7 @@ export default function App() {
 
   function handleKeyDown(e) {
     if (e.key === "Enter") {
-      queryHash();
+      location.hash = "#publicKey=" + publicKeyRef.current?.value;
       e.preventDefault();
     }
   }
@@ -268,7 +266,13 @@ export default function App() {
           <p>Search for a wallet public key</p>
           <css.SearchInput>
             <input type="text" name="key" ref={publicKeyRef} onKeyDown={handleKeyDown} />
-            <css.SearchButton onClick={queryHash}>Get my snapshot</css.SearchButton>
+            <css.SearchButton
+              onClick={() => {
+                location.hash = "#publicKey=" + publicKeyRef.current?.value;
+              }}
+            >
+              Get my snapshot
+            </css.SearchButton>
           </css.SearchInput>
           {renderError()}
           <css.LearnMore onClick={() => setLearnMore(!learnMore)} learnMore={learnMore}>
