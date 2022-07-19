@@ -10,7 +10,7 @@ const standardTransaction = Program.deserializeHex(
 function calcPuzzleHashes(publicKeyText, rowCountLimit): string[] {
   const publicKey = JacobianPoint.fromHexG1(publicKeyText);
   const puzzleHashes: Array<string> = [];
-  const intermediate_unhardened = derivePublicKeyPath(publicKey, [12381, 8555, 2]);
+  const intermediate_unhardened = derivePublicKeyPath(publicKey, [12381, 8444, 2]);
   for (let i = rowCountLimit; i < rowCountLimit + 100; i++) {
     const final_pk = derivePublicKeyPath(intermediate_unhardened, [i]);
     puzzleHashes.push(standardTransaction.curry([Program.fromJacobianPoint(calculateSyntheticPublicKey(final_pk, Program.deserializeHex("ff0980").hash()))]).hashHex());
