@@ -6,7 +6,7 @@ const groupOrder = 0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff000
 export function calculateSyntheticPublicKey(publicKey: JacobianPoint, hiddenPuzzleHash: Uint8Array): JacobianPoint {
   const syntheticOffset = calculateSyntheticOffset(publicKey, hiddenPuzzleHash);
   const blob = bigIntToBytes(syntheticOffset, 32, "big");
-  return PrivateKey.fromBytes(blob).getG1();
+  return PrivateKey.fromBytes(blob).getG1().add(publicKey);
 }
 
 export function calculateSyntheticPrivateKey(privateKey: PrivateKey, hiddenPuzzleHash: Uint8Array): PrivateKey {
