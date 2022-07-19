@@ -56,15 +56,15 @@ app.get("/version", (req, res) => {
 app.post("/public-key", (req, res) => {
   if (req.body.puzzleHashes) {
     const responseArray = [];
-    req.body.puzzleHashes.forEach((hash) => {
+    req.body.puzzleHashes.forEach((hash, idx) => {
       if (csvMemory[hash]) {
         csvMemory[hash].forEach((row) => {
           if (tails[row[0]]) {
             const code = tails[row[0]][0];
             const name = tails[row[0]][1];
-            responseArray.push([hash, row[0], row[1], code, name]);
+            responseArray.push([hash, row[0], row[1], code, name, idx]);
           } else {
-            responseArray.push([hash, row[0], row[1], "/", hash]);
+            responseArray.push([hash, row[0], row[1], "/", hash, idx]);
           }
         });
       }
