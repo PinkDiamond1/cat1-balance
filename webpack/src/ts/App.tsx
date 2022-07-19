@@ -175,8 +175,9 @@ export default function App() {
   function renderShowMoreResults() {
     return (
       <css.MoreResults>
+        <div>Searched through {rowCountLimit.current} receive addresses.</div>
         <div>
-          Searched through {rowCountLimit.current} receive addresses. Peak height: {lastIndex}
+          Derivation index: <b>{lastIndex}</b>
         </div>
         <div>
           <span>Not seeing everything? Try searching additional wallet addresses</span>
