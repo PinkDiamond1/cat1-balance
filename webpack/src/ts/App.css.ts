@@ -18,7 +18,6 @@ css.Content = styled.div`
 
 css.SearchContainer = styled.div`
   text-align: center;
-  padding-bottom: 50px;
 `;
 
 css.Search = styled.div`
@@ -76,7 +75,7 @@ css.WalletResults = styled.div`
   background: #edfbee;
   padding: 1.5rem;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 15px;
 `;
 
 css.ShadowedBox = styled.div`
@@ -118,8 +117,8 @@ css.TableStyled = styled.table`
 
 css.Gathering = styled.div`
   display: inline-block;
-  width: 500px;
-  padding: 75px 25px;
+  width: 600px;
+  padding: 75px 25px 50px;
   > div + div {
     margin: 15px;
   }
@@ -144,6 +143,10 @@ css.MoreResults = styled.div`
     cursor: pointer;
     margin-left: 15px;
   }
+  > div + div {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 `;
 
 css.ErrorMessage = styled.p`
@@ -163,6 +166,22 @@ css.LearnMore = styled.p`
 `;
 
 css.DownloadSnapshotDb = styled.div`
-  padding: 15px 0;
+  text-align: center;
+  padding: 15px 0 50px;
 `;
+
+css.ProgressBar = styled.div`
+  width: 100%;
+  height: 12px;
+  border: 1px solid #abb0b2;
+  border-radius: 3px;
+  margin-top: 30px !important;
+  margin-left: 0 !important;
+  > div {
+    background: #b0debd;
+    height: 10px;
+    border-radius: 2px;
+  }
+`;
+
 export default css;

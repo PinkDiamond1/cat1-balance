@@ -30,45 +30,69 @@ export default function App() {
   const [fingerPrint, setFingerPrint] = React.useState("");
   const [showError, setShowError] = React.useState("");
   const [learnMore, setLearnMore] = React.useState(false);
+  const [progressBarWidth, setProgressBarWidth] = React.useState(0);
+  const [lastIndex, setLastIndex] = React.useState();
   const publicKey = React.useRef();
   const balanceObject = React.useRef({});
-
   const rowCountLimit = React.useRef(0);
 
-  React.useEffect(() => {
+  function parseKeyFromUrl(key: string) {
     const parsedHash = new URLSearchParams(window.location.hash.substring(1));
-    if (parsedHash.get("publicKey")) {
-      publicKey.current = parsedHash.get("publicKey");
+    return parsedHash.get(key);
+  }
+
+  React.useEffect(() => {
+    if (parseKeyFromUrl("publicKey")) {
+      publicKey.current = parseKeyFromUrl("publicKey");
       worker.postMessage({ publicKeyText: publicKey.current, rowCountLimit: rowCountLimit.current });
       if (publicKeyRef.current) {
-        publicKeyRef.current.value = parsedHash.get("publicKey") as string;
+        publicKeyRef.current.value = parseKeyFromUrl("publicKey") as string;
         setTableData(null);
         setFetchingSnapshot(true);
-        if (parsedHash.get("fingerprint")) {
-          setFingerPrint(parsedHash.get("fingerprint") || "");
+        if (parseKeyFromUrl("fingerprint")) {
+          setFingerPrint(parseKeyFromUrl("fingerprint") || "");
         }
       }
     }
 
+    addEventListener("hashchange", (event) => {
+      publicKey.current = parseKeyFromUrl("publicKey");
+      publicKeyRef.current.value = publicKey.current;
+      queryHash();
+    });
+
     worker.onmessage = (messageEvent) => {
       const data = messageEvent.data;
-      if (data.error) {
-        console.error(data.error);
-      } else {
-        postData("/public-key", { puzzleHashes: data.puzzleHashes }).then((response) => {
-          const newData = getTableArray(response.data);
-          setTableData(newData);
+      if (data.puzzleHashes) {
+        if (data.error) {
+          setShowError(data.error);
           setFetchingSnapshot(false);
-        });
+        } else {
+          let currentIndex = rowCountLimit.current;
+          rowCountLimit.current = rowCountLimit.current + data.puzzleHashes.length;
+          postData("/public-key", { puzzleHashes: data.puzzleHashes }).then((response) => {
+            const newData = getTableArray(response.data);
+            if (response.data.length) {
+              setLastIndex(response.data[response.data.length - 1][5] + currentIndex);
+            }
+            setTableData(newData);
+            setFetchingSnapshot(false);
+          });
+        }
+      }
+      if (data.numberOfHashes) {
+        setProgressBarWidth((data.count / data.numberOfHashes) * 100);
       }
     };
   }, []);
 
   function queryHash() {
+    setLastIndex(0);
     setShowError("");
     wipeTableData();
     if (!fetchingSnapshot) {
       const publicKeyText = publicKeyRef.current?.value;
+      publicKey.current = publicKeyText;
       location.hash = "#publicKey=" + publicKeyRef.current?.value;
       if (publicKeyText?.length !== 96) {
         setShowError("Public key should be 96 characters long.");
@@ -93,6 +117,9 @@ export default function App() {
                 <CircularProgress color="inherit" disableShrink />
               </div>
               <div>Gathering on-chain data...</div>
+              <css.ProgressBar>
+                <div style={{ width: `${progressBarWidth}%` }}></div>
+              </css.ProgressBar>
             </css.Gathering>
           </css.ShadowedBox>
         </css.WalletResults>
@@ -146,28 +173,23 @@ export default function App() {
   }
 
   function renderShowMoreResults() {
-    if (!tableData || tableData.length === 0) {
-      return null;
-    }
     return (
       <css.MoreResults>
-        <div>Searched through {rowCountLimit.current + 100} receive addresses.</div>
-        <span>Not seeing everything? Try searching additional wallet addresses</span>
-        <button
-          className="outline-green-button"
-          onClick={() => {
-            rowCountLimit.current = rowCountLimit.current + 100;
-            worker.postMessage({ publicKeyText: publicKey.current, rowCountLimit: rowCountLimit.current });
-            setFetchingSnapshot(true);
-          }}
-        >
-          Search next 100
-        </button>
-        <css.DownloadSnapshotDb>
-          <small>
-            You can also <a href="/snapshot.csv">download the snapshot database</a> if you want to explore deeper.
-          </small>
-        </css.DownloadSnapshotDb>
+        <div>
+          Searched through {rowCountLimit.current} receive addresses. Peak height: {lastIndex}
+        </div>
+        <div>
+          <span>Not seeing everything? Try searching additional wallet addresses</span>
+          <button
+            className="outline-green-button"
+            onClick={() => {
+              worker.postMessage({ publicKeyText: publicKey.current, rowCountLimit: rowCountLimit.current });
+              setFetchingSnapshot(true);
+            }}
+          >
+            Search next 100
+          </button>
+        </div>
       </css.MoreResults>
     );
   }
@@ -175,27 +197,25 @@ export default function App() {
   function renderTableContainer() {
     if (!tableData || fetchingSnapshot) {
       return null;
-    } else if (tableData.length === 0) {
-      return (
-        <css.WalletResults>
-          <css.ShadowedBox>No CATs found.</css.ShadowedBox>
-        </css.WalletResults>
-      );
-    } else if (tableData.length) {
+    } else {
       return (
         <css.WalletResults>
           {renderWalletNumber()}
           <css.ShadowedBox>
-            <css.TableStyled>
-              <thead>
-                <tr>
-                  <th>Token Name</th>
-                  <th>Ticker Symbol</th>
-                  <th>Balance</th>
-                </tr>
-              </thead>
-              <tbody>{renderTableRows()}</tbody>
-            </css.TableStyled>
+            {tableData.length ? (
+              <css.TableStyled>
+                <thead>
+                  <tr>
+                    <th>Token Name</th>
+                    <th>Ticker Symbol</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableRows()}</tbody>
+              </css.TableStyled>
+            ) : (
+              <div>No CATs found.</div>
+            )}
           </css.ShadowedBox>
           {renderShowMoreResults()}
         </css.WalletResults>
@@ -206,7 +226,7 @@ export default function App() {
 
   function renderError() {
     if (showError) {
-      return <css.ErrorMessage>{showError}</css.ErrorMessage>;
+      return <css.ErrorMessage>Error: {showError}</css.ErrorMessage>;
     }
     return null;
   }
@@ -237,7 +257,7 @@ export default function App() {
       <css.Content>
         <div className="col-8-container txt-col-blocks">
           <div className="full-width-col">
-            <p className="lrg-txt">Chia's token standard has been updated to CAT2. As a result, original CAT issuers will be re-issuing their tokens starting July 21st, 2022, 17:00 UTC that will be airdropped to your wallet.</p>
+            <p className="lrg-txt">Chia's token standard has been updated to CAT2. As a result, original CAT issuers will be re-issuing their tokens starting July 26th, 2022, 17:00 UTC that will be airdropped to your wallet.</p>
             <p>This site will help you understand your balance at the time the snapshot was taken. Any transactions that settled after the snapshot won’t be accounted for in the balances reported here.</p>
           </div>
         </div>
@@ -264,6 +284,12 @@ export default function App() {
       </css.SearchContainer>
       {renderWalletResults()}
       {renderTableContainer()}
+      <css.DownloadSnapshotDb>
+        <small>
+          You can also <a href="/snapshot.csv">download the snapshot database</a> if you want to explore deeper.
+        </small>
+      </css.DownloadSnapshotDb>
+
       <Footer />
     </css.Container>
   );
