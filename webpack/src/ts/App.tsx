@@ -188,7 +188,7 @@ export default function App() {
               setFetchingSnapshot(true);
             }}
           >
-            Search next 100
+            Search next 1000
           </button>
         </div>
       </css.MoreResults>

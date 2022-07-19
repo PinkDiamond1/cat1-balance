@@ -12,7 +12,7 @@ function calcPuzzleHashes(publicKeyText, rowCountLimit): string[] {
   const puzzleHashes: Array<string> = [];
 
   const intermediate_unhardened = derivePublicKeyPath(publicKey, [12381, 8444, 2]);
-  const numberOfHashes = rowCountLimit === 0 ? 1000 : 100;
+  const numberOfHashes = rowCountLimit === 0 ? 1000 : 1000;
   for (let i = rowCountLimit; i < rowCountLimit + numberOfHashes; i++) {
     self.postMessage({ numberOfHashes, count: i - rowCountLimit });
     const final_pk = derivePublicKeyPath(intermediate_unhardened, [i]);
@@ -35,7 +35,7 @@ self.onmessage = async ({ data: { publicKeyText, rowCountLimit } }) => {
         const puzzleHashes = calcPuzzleHashes(publicKeyText, rowCountLimit);
         self.postMessage({ puzzleHashes });
       } catch (e) {
-        self.postMessage({ puzzleHashes: [], error: "Unknown public key." });
+        self.postMessage({ puzzleHashes: [], error: "Invalid public key." });
       }
     }
   }
