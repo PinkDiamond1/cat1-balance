@@ -6,6 +6,7 @@ COPY ./webpack /app
 RUN yarn
 RUN npm run build
 COPY ./webpack/src/img /app/dist/img
+COPY ./webpack/src/favicon.ico /app/dist/favicon.ico
 
 RUN mkdir /server
 WORKDIR /server
