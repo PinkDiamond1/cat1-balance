@@ -4,7 +4,6 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
   },
-  devtool: "source-map",
   entry: {
     worker: "./src/ts/worker.tsx",
     index: "./src/ts/index.tsx",
