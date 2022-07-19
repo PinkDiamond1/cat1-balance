@@ -287,7 +287,7 @@ export default function App() {
       {renderTableContainer()}
       <css.DownloadSnapshotDb>
         <small>
-          You can also <a href="/snapshot.csv">download the snapshot database</a> if you want to explore deeper.
+          You can also <a href="/cat1_snapshot_2311763.csv">download the snapshot database</a> if you want to explore deeper.
         </small>
       </css.DownloadSnapshotDb>
 

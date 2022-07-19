@@ -88,43 +88,43 @@ export default function () {
               <ul>
                 <li>
                   <img className="chia-icon social-icon" src="/img/social/github-white.svg" alt="Github" />
-                  <a href="https://github.com/{{ site.data.contact.github_username }}" target="_blank" rel="noreferrer noopener">
+                  <a href="https://github.com/Chia-Network" target="_blank" rel="noreferrer noopener">
                     Github
                   </a>
                 </li>
                 <li>
                   <img className="chia-icon social-icon" src="/img/social/twitter-white.svg" alt="Twitter" />
-                  <a href="https://twitter.com/{{ site.data.contact.twitter_username }}" target="_blank" rel="noreferrer noopener">
+                  <a href="https://twitter.com/chia_project" target="_blank" rel="noreferrer noopener">
                     Twitter
                   </a>
                 </li>
                 <li>
                   <img className="chia-icon social-icon" src="/img/social/keybase-white.svg" alt="Keybase" />
-                  <a href="{{ site.data.contact.keybase_team_page }}" target="_blank" rel="noreferrer noopener">
+                  <a href="https://keybase.io/team/chia_network.public" target="_blank" rel="noreferrer noopener">
                     Keybase
                   </a>
                 </li>
                 <li>
                   <img className="chia-icon social-icon" src="/img/social/reddit-white.svg" alt="Reddit" />
-                  <a href="https://reddit.com/r/{{ site.data.contact.reddit }}" target="_blank" rel="noreferrer noopener">
+                  <a href="https://www.reddit.com/r/chia/" target="_blank" rel="noreferrer noopener">
                     Reddit
                   </a>
                 </li>
                 <li>
                   <img className="chia-icon social-icon" src="/img/social/facebook-white.svg" alt="Facebook" />
-                  <a href="https://www.facebook.com/{{ site.data.contact.facebook_username }}" target="_blank" rel="noreferrer noopener">
+                  <a href="https://www.facebook.com/ChiaProject" target="_blank" rel="noreferrer noopener">
                     Facebook
                   </a>
                 </li>
                 <li>
                   <img className="chia-icon social-icon" src="/img/social/instagram-white.svg" alt="Instagram" />
-                  <a href="https://instagram.com/{{ site.data.contact.instagram_username }}" target="_blank" rel="noreferrer noopener">
+                  <a href="https://www.instagram.com/chia_project/" target="_blank" rel="noreferrer noopener">
                     Instagram
                   </a>
                 </li>
                 <li>
                   <img className="chia-icon social-icon" src="/img/social/linkedin-white.svg" alt="LinkedIn" />
-                  <a href="https://www.linkedin.com/company/{{ site.data.contact.linkedin_username }}" target="_blank" target="_blank" rel="noreferrer noopener">
+                  <a href="https://www.linkedin.com/company/chia-network" target="_blank" target="_blank" rel="noreferrer noopener">
                     LinkedIn
                   </a>
                 </li>

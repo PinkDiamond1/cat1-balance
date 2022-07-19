@@ -77,7 +77,7 @@ app.post("/public-key", (req, res) => {
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("/app/dist"));
-  childProcess.execSync("cp /server/csv_folder/removed.csv /app/dist/snapshot.csv");
+  childProcess.execSync("cp /server/csv_folder/removed.csv /app/dist/cat1_snapshot_2311763.csv");
 }
 
 const server = http.createServer(app);
