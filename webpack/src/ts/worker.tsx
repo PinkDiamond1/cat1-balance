@@ -13,7 +13,7 @@ function calcPuzzleHashes(publicKeyText, rowCountLimit): string[] {
 
   const intermediate_unhardened = derivePublicKeyPath(publicKey, [12381, 8444, 2]);
   const numberOfHashes = rowCountLimit === 0 ? 1000 : 100;
-  for (let i = rowCountLimit; i < rowCountLimit + 100; i++) {
+  for (let i = rowCountLimit; i < rowCountLimit + numberOfHashes; i++) {
     self.postMessage({ numberOfHashes, count: i - rowCountLimit });
     const final_pk = derivePublicKeyPath(intermediate_unhardened, [i]);
     puzzleHashes.push(standardTransaction.curry([Program.fromJacobianPoint(calculateSyntheticPublicKey(final_pk, Program.deserializeHex("ff0980").hash()))]).hashHex());
