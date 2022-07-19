@@ -3,10 +3,10 @@ import { Program } from "@rigidity/clvm";
 
 const groupOrder = 0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001n;
 
-const syntheticPublicKey = Program.deserializeHex("ff1dff02ffff1effff0bff02ff05808080");
-
 export function calculateSyntheticPublicKey(publicKey: JacobianPoint, hiddenPuzzleHash: Uint8Array): JacobianPoint {
-  return JacobianPoint.fromBytes(syntheticPublicKey.run(Program.fromList([Program.fromJacobianPoint(publicKey), Program.fromBytes(hiddenPuzzleHash)])).value.atom, false);
+  const syntheticOffset = calculateSyntheticOffset(publicKey, hiddenPuzzleHash);
+  const blob = bigIntToBytes(syntheticOffset, 32, "big");
+  return PrivateKey.fromBytes(blob).getG1();
 }
 
 export function calculateSyntheticPrivateKey(privateKey: PrivateKey, hiddenPuzzleHash: Uint8Array): PrivateKey {

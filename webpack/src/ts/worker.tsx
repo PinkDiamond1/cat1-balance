@@ -1,18 +1,22 @@
 import { JacobianPoint } from "@rigidity/bls-signatures";
 import { Program } from "@rigidity/clvm";
-import { calculateSyntheticPublicKey, derivePublicKey } from "./keys";
+import { calculateSyntheticPublicKey, derivePublicKey, derivePublicKeyPath } from "./keys";
 import random100 from "./random100";
+
+const standardTransaction = Program.deserializeHex(
+  "ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080"
+);
 
 function calcPuzzleHashes(publicKeyText, rowCountLimit): string[] {
   const publicKey = JacobianPoint.fromHexG1(publicKeyText);
-  const standardTransaction = Program.deserializeHex(
-    "ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080"
-  );
   const puzzleHashes: Array<string> = [];
+
+  const intermediate_unhardened = derivePublicKeyPath(publicKey, [12381, 8444, 2]);
   const numberOfHashes = rowCountLimit === 0 ? 1000 : 100;
-  for (let i = rowCountLimit; i < rowCountLimit + numberOfHashes; i++) {
+  for (let i = rowCountLimit; i < rowCountLimit + 100; i++) {
     self.postMessage({ numberOfHashes, count: i - rowCountLimit });
-    puzzleHashes.push(standardTransaction.curry([Program.fromJacobianPoint(calculateSyntheticPublicKey(derivePublicKey(publicKey, i), Program.deserializeHex("ff0980").hash()))]).hashHex());
+    const final_pk = derivePublicKeyPath(intermediate_unhardened, [i]);
+    puzzleHashes.push(standardTransaction.curry([Program.fromJacobianPoint(calculateSyntheticPublicKey(final_pk, Program.deserializeHex("ff0980").hash()))]).hashHex());
   }
   return puzzleHashes;
 }
