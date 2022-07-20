@@ -237,9 +237,24 @@ export default function App() {
     }
   }
 
-  function renderLearnMore() {
+  function renderLearnMoreBody() {
     if (!learnMore) return null;
-    return <img src="/img/chia-public-key.png" />;
+    return (
+      <css.LearnMore>
+        <h2>Find your public key in the Chia App interface</h2>
+        <h3>Step 1</h3>
+        <h4>On the “Select Key” screen in the Chia app, click on the “See Private Key” icon </h4>
+        <img src="/img/select-key.png" />
+        <h3>Step 2</h3>
+        <h4>Copy the Public Key from the list of keys available. </h4>
+        <img src="/img/public-key.png" />
+        <h2>Find your public key from the Command Line</h2>
+        <h3>Step 1</h3>
+        <h4>Type in “chia keys show”</h4>
+        <h3>Step 2</h3>
+        <h4>Copy the “Master Public Key” that is displayed as an output.</h4>
+      </css.LearnMore>
+    );
   }
 
   return (
@@ -256,7 +271,7 @@ export default function App() {
       <css.Content>
         <div className="col-8-container txt-col-blocks">
           <div className="full-width-col">
-            <p className="lrg-txt">Chia's token standard has been updated to CAT2. As a result, original CAT issuers will be re-issuing their tokens starting July 26th, 2022, 17:00 UTC that will be airdropped to your wallet.</p>
+            <p className="lrg-txt">Chia's token standard has been updated to CAT2. As a result, the original issuers will airdrop the updated CAT tokens to your wallet starting July 26th, 2022, 17:00 UTC.</p>
             <p>This site will help you understand your balance at the time the snapshot was taken. Any transactions that settled after the snapshot won’t be accounted for in the balances reported here.</p>
           </div>
         </div>
@@ -275,11 +290,14 @@ export default function App() {
             </css.SearchButton>
           </css.SearchInput>
           {renderError()}
-          <css.LearnMore onClick={() => setLearnMore(!learnMore)} learnMore={learnMore}>
-            <span>Learn how to find your public key here.</span>
-            <img src="/img/arrow_down.svg" alt="Chia Network Logo" />
-            {renderLearnMore()}
-          </css.LearnMore>
+          <css.LearnMoreContainer>
+            <p>This website only supports looking up wallets with observer keys. Any wallet created since 1.3 uses an observer key by default.</p>
+            <css.LearnMoreLink onClick={() => setLearnMore(!learnMore)}>
+              <span>Learn how to find your public key here.</span>
+              <css.LearnMoreArrow src="/img/arrow_down.svg" alt="Chia Network Logo" learnMore={learnMore} />
+            </css.LearnMoreLink>
+            {renderLearnMoreBody()}
+          </css.LearnMoreContainer>
           <p>
             Public keys are 96 characters long. It should look like this:
             <br />

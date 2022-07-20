@@ -153,16 +153,8 @@ css.ErrorMessage = styled.p`
   color: red;
 `;
 
-css.LearnMore = styled.p`
+css.LearnMoreContainer = styled.div`
   cursor: pointer;
-  img:nth-child(2) {
-    display: inline-block;
-    margin-left: 5px;
-    transform: ${(props) => (props.learnMore ? "rotate(180deg)" : "rotate(0deg)")};
-  }
-  img:nth-child(3) {
-    margin: 10px 0;
-  }
 `;
 
 css.DownloadSnapshotDb = styled.div`
@@ -181,6 +173,46 @@ css.ProgressBar = styled.div`
     background: #b0debd;
     height: 10px;
     border-radius: 2px;
+  }
+`;
+
+css.LearnMoreLink = styled.div`
+  cursor: pointer;
+`;
+
+css.LearnMoreArrow = styled.img`
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 8px;
+  margin-left: 10px;
+  transform: ${(props) => (props.learnMore ? "rotate(180deg)" : "rotate(0deg)")};
+`;
+
+css.LearnMore = styled.div`
+  padding: 10px 20px;
+  background: #f8f8f8;
+  h2:first-child {
+    margin-top: 10px;
+  }
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 10px 0;
+    line-height: 24px;
+    margin-top: 35px;
+  }
+  h3 {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  h4 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  img {
+    margin: 10px 0;
   }
 `;
 
