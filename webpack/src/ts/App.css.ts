@@ -216,4 +216,9 @@ css.LearnMore = styled.div`
   }
 `;
 
+css.Grey = styled.span`
+  color: #9e9e9e;
+  font-weight: 400;
+`;
+
 export default css;

@@ -301,7 +301,7 @@ export default function App() {
           <p>
             Public keys are 96 characters long. It should look like this:
             <br />
-            a95db0f87574d1af5991f93df7d36f40ccadf6c403889ae5987f6013a28caa150d6bbc24493889c61a4829c1656d7e88
+            <css.Grey>a95db0f87574d1af5991f93df7d36f40ccadf6c403889ae5987f6013a28caa150d6bbc24493889c61a4829c1656d7e88</css.Grey>
           </p>
         </css.Search>
       </css.SearchContainer>
