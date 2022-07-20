@@ -106,7 +106,7 @@ css.TableStyled = styled.table`
   }
   td {
     font-size: 14px;
-    font-weight: 100;
+    font-weight: 400;
     border-bottom: 1px solid #e0e0e0;
   }
   tbody tr:hover {
