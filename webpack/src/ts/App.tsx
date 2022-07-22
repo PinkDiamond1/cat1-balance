@@ -275,8 +275,8 @@ export default function App() {
       <css.Content>
         <div className="col-8-container txt-col-blocks">
           <div className="full-width-col">
-            <p className="lrg-txt">Chia's token standard has been updated to CAT2. As a result, the original issuers will airdrop the updated CAT tokens to your wallet starting July 26th, 2022, 17:00 UTC.</p>
-            <p>This site will help you understand your balance at the time the snapshot was taken. Any transactions that settled after the snapshot won’t be accounted for in the balances reported here.</p>
+            <p className="lrg-txt">Chia's token standard has been updated to CAT2. The original CAT issuers will airdrop your updated CAT2 tokens directly to your wallet starting July 26th, 2022, 17:00 UTC.</p>
+            <p>This site will help you understand your balance at the time the snapshot was taken - it is not dynamically updated with reissuance. Any transactions that are settled after the snapshot will not be accounted for in the balances reported here.</p>
           </div>
         </div>
       </css.Content>
