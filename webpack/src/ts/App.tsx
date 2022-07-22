@@ -176,7 +176,7 @@ export default function App() {
       <css.MoreResults>
         <div>Searched through {rowCountLimit.current} receive addresses.</div>
         <div>
-          Derivation index: <b>{lastIndex}</b>
+          Highest derivation index found: <b>{lastIndex}</b>
         </div>
         <div>
           <span>Not seeing everything? Try searching additional wallet addresses</span>
