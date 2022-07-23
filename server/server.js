@@ -11,16 +11,10 @@ const serverPort = 9090;
 let csvMemory = {};
 
 (async () => {
-  const csvExists = fs.existsSync(__dirname + "/csv_folder/removed.csv");
-
-  if (!csvExists) {
-    childProcess.execSync("unzip csv.zip -d csv_folder");
-  }
-
   let count = 0;
   // const random100 = [];
   lineReader.eachLine(
-    __dirname + "/csv_folder/removed.csv",
+    __dirname + "/cat1-snapshot.csv",
     function (line) {
       count++;
       const row = line.split(",");
@@ -77,7 +71,7 @@ app.post("/public-key", (req, res) => {
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("/app/dist"));
-  childProcess.execSync("cp /server/csv_folder/removed.csv /app/dist/cat1_snapshot_2311763.csv");
+  childProcess.execSync("cp /server/cat1-snapshot.csv /app/dist/cat1-snapshot.csv");
 }
 
 const server = http.createServer(app);
