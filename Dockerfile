@@ -14,7 +14,7 @@ COPY ./server /server
 RUN yarn
 
 RUN yarn global add pm2
-COPY cat1-snapshot.csv /server/cat1-snapshot.csv
+COPY ./cat1-snapshot.csv /server/cat1-snapshot.csv
 
 ENV NODE_ENV=production
 
