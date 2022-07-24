@@ -23,7 +23,7 @@ ingress:
   servicePort: http
   tls:
     enabled: true
-    secretName: cat1-balance-star-tls
+    secretName: cat1-balance-stage-star-tls
 
 nameOverride: ""
 fullnameOverride: ""
