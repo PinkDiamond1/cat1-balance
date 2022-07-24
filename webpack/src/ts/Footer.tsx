@@ -131,12 +131,16 @@ export default function () {
               </ul>
             </div>
           </div>
-          <div style={{ paddingTop: "1.5rem" }}>
-            <p>
+          <div style={{ paddingTop: "2.5rem" }}>
+            <div>
               <small>
-                © Chia Network site.time | 2022 | <a href="https://www.chia.net/terms">Terms of Use</a> | <a href="https://www.chia.net/trademarks">Trademarks</a> | <a href="https://www.chia.net/intellectual-property">Intellectual Property</a> | <a href="https://www.chia.net/privacy">Privacy</a>
+                © 2022 Chia Network Inc., Licensed under the{" "}
+                <a href="https://github.com/Chia-Network/chialisp-web/blob/main/LICENSE" target="_blank">
+                  Apache License, Version 2.0
+                </a>{" "}
+                | <a href="https://www.chia.net/terms">Terms</a>
               </small>
-            </p>
+            </div>
           </div>
         </div>
       </div>
