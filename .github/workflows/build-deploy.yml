@@ -18,6 +18,36 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Vault Login
+        uses: Chia-Network/actions/vault/login@main
+        with:
+          vault_url: ${{ secrets.VAULT_URL }}
+          role_name: github
+
+      - name: Get secrets from vault
+        uses: hashicorp/vault-action@v2.3.0
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          token: ${{ env.VAULT_TOKEN }}
+          secrets: |
+            secret/data/backblaze/cat1-download/cat1-download-read applicationKey | BACKBLAZE_APP_KEY;
+            secret/data/backblaze/cat1-download/cat1-download-read keyID | BACKBLAZE_KEY_ID;
+
+      - name: Install b2 CLI tool
+        run: |
+          wget https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-linux
+          chmod +x ./b2-linux
+          mv ./b2-linux ./b2
+          ./b2 --help
+
+      - name: Authenticate to Backblaze
+        run: |
+          ./b2 authorize-account ${BACKBLAZE_KEY_ID} ${BACKBLAZE_APP_KEY}
+
+      - name: Get CSV snapshot database from Backblaze
+        run: |
+          ./b2 download_file_by_name cat1-download cat1-snapshot.csv cat1-snapshot.csv
+
       - name: Set up Docker Context for Buildx
         id: buildx-context
         run: |

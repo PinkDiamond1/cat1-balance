@@ -313,7 +313,7 @@ export default function App() {
       {renderTableContainer()}
       <css.DownloadSnapshotDb>
         <small>
-          You can also <a href="/cat1_snapshot_2311763.csv">download the snapshot database</a> if you want to explore deeper.
+          You can also <a href="https://cat1-download.chia.net/file/cat1-download/cat1-snapshot.csv">download the snapshot database</a> if you want to explore deeper.
         </small>
       </css.DownloadSnapshotDb>
 
