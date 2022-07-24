@@ -14,16 +14,13 @@ service:
 deployCert: true
 
 ingress:
-  hostname: cat1-stage.chia.net
+  hostname: cat1.chia.net
   annotations:
     ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8,100.64.0.0/10
-    nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8,100.64.0.0/10
-    external-dns.alpha.kubernetes.io/target: k8s.fmt.chiatechlab.com
   servicePort: http
   tls:
     enabled: true
-    secretName: cat1-balance-stage-star-tls
+    secretName: cat1-balance-star-tls
 
 nameOverride: ""
 fullnameOverride: ""
