@@ -46,7 +46,9 @@ jobs:
 
       - name: Get CSV snapshot database from Backblaze
         run: |
-          ./b2 download_file_by_name cat1-download cat1-snapshot.csv cat1-snapshot.csv
+          ./b2 download_file_by_name cat1-download cat1-snapshot.zip cat1-snapshot.zip
+          unzip cat1-snapshot.zip
+          mv cat1_csv_files/000_cat1-snapshot.csv cat1-snapshot.csv
 
       - name: Set up Docker Context for Buildx
         id: buildx-context

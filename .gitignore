@@ -109,3 +109,5 @@ dist
 # csv unpacked
 csv_folder
 cat1-snapshot.csv
+cat1-snapshot.zip
+cat1_csv_files
