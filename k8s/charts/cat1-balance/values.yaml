@@ -1,4 +1,4 @@
-replicaCount: 1
+replicaCount: 3
 
 image: ghcr.io/chia-network/cat1-balance
 
